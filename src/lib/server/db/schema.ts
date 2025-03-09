@@ -56,9 +56,10 @@ export const visitorEntries = pgTable('visitor_entries', {
 	visitorId: text('visitor_id')
 		.references(() => visitors.id)
 		.notNull(),
-	dateofvisit: text('date_of_visit').notNull(),
-	intime: text('in_time').default('12:00').notNull(),
-	outtime: text('out_time').default('12:00'),
+	dateofvisit: timestamp('date_of_visit', { withTimezone: true, mode: 'date' })
+		.defaultNow()
+		.notNull(),
+	outtime: text('out_time'),
 	reason: text('reason').notNull(),
 	host: text('host').notNull(),
 	vehiclenumber: text('vehicle_number'),

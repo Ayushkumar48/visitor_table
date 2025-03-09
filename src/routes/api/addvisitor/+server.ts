@@ -9,7 +9,14 @@ export async function GET({ request }) {
 			.select()
 			.from(visitors)
 			.where(eq(visitors.phonenumber, phonenumber));
-		return new Response(JSON.stringify({ existingVisitor }), {
+		if (!existingVisitor) {
+			return new Response(JSON.stringify({}), {
+				headers: {
+					'Content-Type': 'application/json'
+				}
+			});
+		}
+		return new Response(JSON.stringify(existingVisitor), {
 			headers: {
 				'Content-Type': 'application/json'
 			}

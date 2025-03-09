@@ -39,16 +39,6 @@ export const visitorSchema = z.object({
 		.min(1, 'Age should be between 1 and 120')
 		.max(120, 'Age should be between 1 and 120'),
 	gender: z.enum(['Male', 'Female', 'Prefer not to say']),
-	dateofvisit: z.string(),
-	intime: z
-		.string()
-		.regex(/^([01]\d|2[0-3]):([0-5]\d)$/, 'Invalid time format (HH:MM)')
-		.default('12:00'),
-	outtime: z
-		.string()
-		.regex(/^([01]\d|2[0-3]):([0-5]\d)$/, 'Invalid time format (HH:MM)')
-		.default('12:00')
-		.optional(),
 	reason: z.string().min(1, 'Please provide the reason for the visit.'),
 	host: z.string().min(1, 'Please specify the person you want to meet.'),
 	governmentidtype: z.enum([

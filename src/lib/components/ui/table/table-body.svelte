@@ -8,17 +8,9 @@
 		class: className,
 		children,
 		...restProps
-	}: WithElementRef<HTMLAttributes<HTMLElement>> = $props();
+	}: WithElementRef<HTMLAttributes<HTMLTableSectionElement>> = $props();
 </script>
 
-<div
-	bind:this={ref}
-	data-sidebar="content"
-	class={cn(
-		'flex min-h-0 flex-1 flex-col gap-2 overflow-auto group-data-[collapsible=icon]:overflow-hidden',
-		className
-	)}
-	{...restProps}
->
+<tbody bind:this={ref} class={cn('[&_tr:last-child]:border-0', className)} {...restProps}>
 	{@render children?.()}
-</div>
+</tbody>

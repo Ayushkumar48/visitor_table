@@ -5,16 +5,11 @@
 	import Search from 'lucide-svelte/icons/search';
 	import Settings from 'lucide-svelte/icons/settings';
 	import * as Sidebar from '$lib/components/ui/sidebar/index.js';
-	import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index';
-	import { ChevronsUpDown, CircleUserRound, Ellipsis } from 'lucide-svelte';
-	import { Separator } from '$lib/components/ui/separator/index.js';
-	import Breadcrumb from './Breadcrumb.svelte';
+
 	import Sun from 'lucide-svelte/icons/sun';
 	import Moon from 'lucide-svelte/icons/moon';
 
 	import { toggleMode } from 'mode-watcher';
-	import { user } from '$lib/client/store.svelte';
-	import { goto } from '$app/navigation';
 	import AddVisitor from './AddVisitor.svelte';
 	import type { Infer, SuperValidated } from 'sveltekit-superforms';
 	import type { VisitorSchema } from '$lib/client/schema';
@@ -66,10 +61,12 @@
 			plan: 'Free'
 		}
 	];
-	let { data } = $props<{ data: { form: SuperValidated<Infer<VisitorSchema>> } }>();
+	let { data } = $props<{
+		data: { form: SuperValidated<Infer<VisitorSchema>> };
+	}>();
 </script>
 
-<Sidebar.Root collapsible="icon">
+<Sidebar.Root collapsible="icon" class="flex-shrink-0">
 	<Sidebar.Header>
 		<TeamSwitcher {teams} />
 	</Sidebar.Header>
@@ -115,12 +112,3 @@
 		</Sidebar.Menu>
 	</Sidebar.Footer>
 </Sidebar.Root>
-<Sidebar.Inset>
-	<header class="flex h-12 items-center justify-start gap-4 px-4">
-		<Sidebar.Trigger />
-		<div>
-			<Separator orientation="vertical" class="h-6" />
-		</div>
-		<Breadcrumb />
-	</header>
-</Sidebar.Inset>

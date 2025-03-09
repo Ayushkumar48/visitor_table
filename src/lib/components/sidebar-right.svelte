@@ -1,18 +1,12 @@
 <script lang="ts">
 	import Calendars from '$lib/components/calendars.svelte';
 	import DatePicker from '$lib/components/date-picker.svelte';
-	import NavUser from '$lib/components/nav-user.svelte';
 	import * as Sidebar from '$lib/components/ui/sidebar/index.js';
 	import { Plus } from '@lucide/svelte';
 	import type { ComponentProps } from 'svelte';
+	import NavUser from './custom/NavUser.svelte';
 
-	// This is sample data.
 	const data = {
-		user: {
-			name: 'shadcn',
-			email: 'm@example.com',
-			avatar: '/avatars/shadcn.jpg'
-		},
 		calendars: [
 			{
 				name: 'My Calendars',
@@ -35,11 +29,11 @@
 <Sidebar.Root
 	bind:ref
 	collapsible="none"
-	class="sticky top-0 hidden h-svh border-l lg:flex"
+	class="fixed top-0 right-0 hidden h-svh border-l lg:flex"
 	{...restProps}
 >
 	<Sidebar.Header class="border-sidebar-border h-16 border-b">
-		<NavUser user={data.user} />
+		<NavUser />
 	</Sidebar.Header>
 	<Sidebar.Content>
 		<DatePicker />

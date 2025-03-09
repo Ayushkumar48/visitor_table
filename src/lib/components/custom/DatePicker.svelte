@@ -1,13 +1,3 @@
-<script lang="ts" module>
-	import { z } from 'zod';
-
-	export const formSchema = z.object({
-		dob: z.string().refine((v) => v, { message: 'A date of birth is required.' })
-	});
-
-	export type FormSchema = typeof formSchema;
-</script>
-
 <script lang="ts">
 	import CalendarIcon from 'lucide-svelte/icons/calendar';
 	import {
@@ -46,10 +36,10 @@
 	let placeholder = $state(today(getLocalTimeZone()));
 </script>
 
-<Form.Field {form} name="dob" class="w-1/2">
+<Form.Field {form} name="dateofvisit" class="w-1/2">
 	<Form.Control>
 		{#snippet children({ props })}
-			<Form.Label>Date of birth</Form.Label>
+			<Form.Label>Date of Visit</Form.Label>
 			<Popover.Root>
 				<Popover.Trigger {...props}>
 					{#snippet child({ props })}

@@ -1,5 +1,5 @@
 import { visitorSchema } from '$lib/client/schema';
-import { db } from '$lib/server/db/index.ts';
+import { db } from '$lib/server/db/index.js';
 import { visitorEntries, visitors } from '$lib/server/db/schema.js';
 import { eq } from 'drizzle-orm';
 import { superValidate, fail, message } from 'sveltekit-superforms';
@@ -8,7 +8,6 @@ import { zod } from 'sveltekit-superforms/adapters';
 export const actions = {
 	default: async (event) => {
 		const form = await superValidate(event, zod(visitorSchema));
-
 		if (!form.valid) {
 			return fail(400, { form });
 		}
@@ -40,9 +39,6 @@ export const actions = {
 			await db.insert(visitorEntries).values({
 				id: visitorEntryId,
 				visitorId,
-				dateofvisit: form.data.dateofvisit,
-				intime: form.data.intime,
-				outtime: form.data.outtime,
 				reason: form.data.reason,
 				host: form.data.host,
 				vehiclenumber: form.data.vehiclenumber,
