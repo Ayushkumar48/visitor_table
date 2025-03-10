@@ -131,17 +131,23 @@
 		</DropdownMenu.Root>
 	</div>
 	<div class="rounded-md border overflow-y-auto custom-scrollbar">
-		<Table.Root class="min-w-full table-fixed">
+		<Table.Root class="min-w-full">
 			<Table.Header>
 				{#each table.getHeaderGroups() as headerGroup (headerGroup.id)}
 					<Table.Row>
 						{#each headerGroup.headers as header (header.id)}
 							<Table.Head>
 								{#if !header.isPlaceholder}
-									<FlexRender
-										content={header.column.columnDef.header}
-										context={header.getContext()}
-									/>
+									{#if header.column.id === 'select' || header.column.id === 'dateofvisit'}
+										<FlexRender
+											content={header.column.columnDef.header}
+											context={header.getContext()}
+										/>
+									{:else if typeof header.column.columnDef.header === 'function'}
+										{@html header.column.columnDef.header(header.getContext())}
+									{:else if typeof header.column.columnDef.header === 'string'}
+										{@html header.column.columnDef.header}
+									{/if}
 								{/if}
 							</Table.Head>
 						{/each}
@@ -158,19 +164,21 @@
 								</Table.Cell>
 							{:else}
 								<Table.Cell class="w-[10ch] truncate">
-									<Tooltip.Provider>
+									<Tooltip.Provider delayDuration={0} disableHoverableContent={true}>
 										<Tooltip.Root delayDuration={100}>
 											<Tooltip.Trigger>
-												<FlexRender
-													content={cell.column.columnDef.cell}
-													context={cell.getContext()}
-												/>
+												{#if typeof cell.column.columnDef.cell === 'function'}
+													{@html cell.column.columnDef.cell(cell.getContext())}
+												{:else if typeof cell.column.columnDef.cell === 'string'}
+													{@html cell.column.columnDef.cell}
+												{/if}
 											</Tooltip.Trigger>
-											<Tooltip.Content align="center">
-												<FlexRender
-													content={cell.column.columnDef.cell}
-													context={cell.getContext()}
-												/>
+											<Tooltip.Content align="center" class="text-sm">
+												{#if typeof cell.column.columnDef.cell === 'function'}
+													{@html cell.column.columnDef.cell(cell.getContext())}
+												{:else if typeof cell.column.columnDef.cell === 'string'}
+													{@html cell.column.columnDef.cell}
+												{/if}
 											</Tooltip.Content>
 										</Tooltip.Root>
 									</Tooltip.Provider>

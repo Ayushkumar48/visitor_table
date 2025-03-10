@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Calendars from '$lib/components/calendars.svelte';
-	import DatePicker from '$lib/components/date-picker.svelte';
+	import CustomDatePicker from '$lib/components/custom/custom-date-picker/CustomDatePicker.svelte';
 	import * as Sidebar from '$lib/components/ui/sidebar/index.js';
 	import { Plus } from '@lucide/svelte';
 	import type { ComponentProps } from 'svelte';
@@ -36,11 +36,11 @@
 		<NavUser />
 	</Sidebar.Header>
 	<Sidebar.Content>
-		<DatePicker />
+		<CustomDatePicker />
 		<Sidebar.Separator class="mx-0" />
-		<Calendars calendars={data.calendars} />
+		<!-- <Calendars calendars={data.calendars} /> -->
 	</Sidebar.Content>
-	<Sidebar.Footer>
+	<!-- <Sidebar.Footer>
 		<Sidebar.Menu>
 			<Sidebar.MenuItem>
 				<Sidebar.MenuButton>
@@ -49,5 +49,5 @@
 				</Sidebar.MenuButton>
 			</Sidebar.MenuItem>
 		</Sidebar.Menu>
-	</Sidebar.Footer>
+	</Sidebar.Footer> -->
 </Sidebar.Root>

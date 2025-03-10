@@ -1,9 +1,15 @@
 import { db } from '$lib/server/db';
 import { visitorEntries, visitors } from '$lib/server/db/schema';
-import { desc, eq, sql } from 'drizzle-orm';
+import { eq, sql } from 'drizzle-orm';
 import type { VisitorEntry } from '$lib/components/custom/data-table/columns';
 
 export async function load() {
+	const nowUtc = new Date();
+	const istOffset = 330;
+	const nowIst = new Date(nowUtc.getTime() + istOffset * 60000);
+	const todayIst = new Date(nowIst.getFullYear(), nowIst.getMonth(), nowIst.getDate());
+	const todayISO = todayIst.toISOString().split('T')[0];
+
 	const allVisitors = await db
 		.select({
 			id: visitorEntries.id,
@@ -20,7 +26,13 @@ export async function load() {
 		})
 		.from(visitorEntries)
 		.leftJoin(visitors, eq(visitorEntries.visitorId, visitors.id))
-		.orderBy(desc(visitorEntries.dateofvisit));
+		.where(
+			eq(
+				sql`date_trunc('day', ${visitorEntries.dateofvisit} AT TIME ZONE 'Asia/Kolkata')`,
+				sql`${todayISO}::date`
+			)
+		);
+
 	return {
 		allVisitors: allVisitors.map((v) => ({
 			...v,

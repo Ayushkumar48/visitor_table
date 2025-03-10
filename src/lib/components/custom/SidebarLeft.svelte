@@ -13,7 +13,7 @@
 	import AddVisitor from './AddVisitor.svelte';
 	import type { Infer, SuperValidated } from 'sveltekit-superforms';
 	import type { VisitorSchema } from '$lib/client/schema';
-	import { GalleryVerticalEnd, AudioWaveform, Command } from '@lucide/svelte';
+	import { GalleryVerticalEnd, AudioWaveform, Command, ScrollText } from '@lucide/svelte';
 	import TeamSwitcher from './TeamSwitcher.svelte';
 	import NavUser from './NavUser.svelte';
 
@@ -24,19 +24,19 @@
 			icon: House
 		},
 		{
-			title: 'All Visitors',
-			url: '/visitors',
-			icon: Inbox
-		},
-		{
-			title: 'Calendar',
-			url: '/abc/abc/abc/abc',
+			title: 'Today',
+			url: '/visitors/today',
 			icon: Calendar
 		},
 		{
-			title: 'Search',
-			url: '#',
+			title: 'Search for a visitor',
+			url: '/visitors/search',
 			icon: Search
+		},
+		{
+			title: "Visitors' Data",
+			url: '/visitors',
+			icon: ScrollText
 		},
 		{
 			title: 'Settings',
