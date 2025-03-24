@@ -6,8 +6,29 @@
 	import * as Sidebar from '$lib/components/ui/sidebar/index.js';
 	import { useSidebar } from '$lib/components/ui/sidebar/index.js';
 	import { LogOut, ChevronsUpDown, BadgeCheck } from '@lucide/svelte';
+	import { onMount } from 'svelte';
 
 	const sidebar = useSidebar();
+	let image: string | null = null;
+
+	async function fetchImage() {
+		if (user.current) {
+			try {
+				const res = await fetch(`/account/${user.current.id}`);
+				if (res.ok) {
+					const blob = await res.blob();
+					image = URL.createObjectURL(blob);
+				} else {
+					console.error('Failed to fetch image:', res.statusText);
+				}
+			} catch (error) {
+				console.error('Error fetching image:', error);
+			}
+		}
+	}
+	onMount(() => {
+		fetchImage();
+	});
 </script>
 
 <Sidebar.Menu>
@@ -21,8 +42,12 @@
 						{...props}
 					>
 						<Avatar.Root class="h-8 w-8 rounded-lg">
-							<Avatar.Image src={user.current?.image} alt={user.current?.firstname || 'User'} />
-							<Avatar.Fallback class="rounded-lg">CN</Avatar.Fallback>
+							<Avatar.Image src={image} alt={user.current?.firstname || 'User'} />
+							<Avatar.Fallback class="rounded-lg"
+								>{user.current &&
+									user.current?.firstname[0].toUpperCase() +
+										user.current?.lastname[0].toUpperCase()}</Avatar.Fallback
+							>
 						</Avatar.Root>
 						<div class="grid flex-1 text-left text-sm leading-tight">
 							<span class="truncate font-semibold"
@@ -44,8 +69,12 @@
 				<DropdownMenu.Label class="p-0 font-normal">
 					<div class="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
 						<Avatar.Root class="h-8 w-8 rounded-lg">
-							<Avatar.Image src={user.current?.image} alt={user.current?.firstname || 'User'} />
-							<Avatar.Fallback class="rounded-lg">CN</Avatar.Fallback>
+							<Avatar.Image src={image} alt={user.current?.firstname || 'User'} />
+							<Avatar.Fallback class="rounded-lg"
+								>{user.current &&
+									user.current?.firstname[0].toUpperCase() +
+										user.current?.lastname[0].toUpperCase()}</Avatar.Fallback
+							>
 						</Avatar.Root>
 						<div class="grid flex-1 text-left text-sm leading-tight">
 							<span class="truncate font-semibold"
@@ -59,7 +88,7 @@
 				<DropdownMenu.Separator />
 
 				<DropdownMenu.Group>
-					<DropdownMenu.Item>
+					<DropdownMenu.Item onclick={() => goto('/account')}>
 						<BadgeCheck />
 						Account
 					</DropdownMenu.Item>

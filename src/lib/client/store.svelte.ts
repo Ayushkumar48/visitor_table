@@ -1,5 +1,5 @@
 import { PersistedState } from 'runed';
-type UserType = {
+export type UserType = {
 	id: string;
 	firstname: string;
 	lastname: string;
@@ -8,7 +8,6 @@ type UserType = {
 	password: null;
 	age: number | null;
 	address: string;
-	image: string | null;
 	approved: boolean | null;
 	createdAt: Date;
 } | null;

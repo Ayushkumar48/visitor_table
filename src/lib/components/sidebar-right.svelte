@@ -32,9 +32,9 @@
 	class="fixed top-0 right-0 hidden h-svh border-l lg:flex"
 	{...restProps}
 >
-	<Sidebar.Header class="border-sidebar-border h-16 border-b">
+	<!-- <Sidebar.Header class="border-sidebar-border h-16 border-b">
 		<NavUser />
-	</Sidebar.Header>
+	</Sidebar.Header> -->
 	<Sidebar.Content>
 		<CustomDatePicker />
 		<Sidebar.Separator class="mx-0" />

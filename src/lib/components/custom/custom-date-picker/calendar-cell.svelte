@@ -10,7 +10,7 @@
 	}: CalendarPrimitive.CellProps = $props();
 
 	let numberofVisitors = $state(0);
-	let hoverTimeout: number | null = null;
+	let hoverTimeout: ReturnType<typeof setTimeout> | null = null;
 
 	async function fetchVisitorData() {
 		const res = await fetch('/api/visitorNumbers', {

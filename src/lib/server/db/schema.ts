@@ -1,4 +1,14 @@
-import { pgTable, text, integer, timestamp, boolean, pgEnum } from 'drizzle-orm/pg-core';
+import { sql } from 'drizzle-orm';
+import {
+	pgTable,
+	text,
+	integer,
+	timestamp,
+	boolean,
+	pgEnum,
+	uuid,
+	customType
+} from 'drizzle-orm/pg-core';
 
 export const genderEnum = pgEnum('gender', ['Male', 'Female', 'Prefer not to say']);
 
@@ -16,6 +26,12 @@ export const governmentIdTypeEnum = pgEnum('government_id_type', [
 	'Armed Forces ID Card'
 ]);
 
+const bytea = customType<{ data: Buffer }>({
+	dataType() {
+		return 'bytea';
+	}
+});
+
 export const users = pgTable('users', {
 	id: text('id').primaryKey(),
 	firstname: text('first_name').notNull(),
@@ -26,7 +42,6 @@ export const users = pgTable('users', {
 	age: integer('age'),
 	address: text('address').notNull(),
 	approved: boolean('approved').default(false),
-	image: text('image'),
 	createdAt: timestamp('created_at').defaultNow().notNull()
 });
 
@@ -66,7 +81,20 @@ export const visitorEntries = pgTable('visitor_entries', {
 	belongings: text('belongings')
 });
 
+export const profileImages = pgTable('profile_images', {
+	id: uuid('id')
+		.primaryKey()
+		.default(sql`gen_random_uuid()`),
+	userId: text('user_id')
+		.notNull()
+		.unique()
+		.references(() => users.id),
+	image_data: bytea('image_data').notNull(),
+	createdAt: timestamp('created_at', { withTimezone: true }).default(sql`CURRENT_TIMESTAMP`)
+});
+
 export type Session = typeof sessions.$inferSelect;
 export type User = typeof users.$inferSelect;
 export type Visitor = typeof visitors.$inferSelect;
 export type VisitorEntry = typeof visitorEntries.$inferSelect;
+export type ProfileImage = typeof profileImages.$inferSelect;
