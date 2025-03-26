@@ -6,5 +6,6 @@ export async function GET(event) {
 	}
 	await invalidateSession(event.locals.session.id);
 	deleteSessionTokenCookie(event);
+	event.locals.user = null;
 	return json({});
 }

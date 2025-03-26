@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { user } from '$lib/client/store.svelte';
 	import { Input } from '$lib/components/ui/input/index';
 	import { Label } from '$lib/components/ui/label/index';
 	import * as Dialog from '$lib/components/ui/dialog/index.js';
@@ -9,15 +8,15 @@
 	import { toast } from 'svelte-sonner';
 	import { Button } from '$lib/components/ui/button';
 	import { goto } from '$app/navigation';
-
+	import { page } from '$app/state';
 	async function uploadImage(event: Event) {
 		const input = event.target as HTMLInputElement;
 		const file = input.files?.[0];
 
-		if (file && user.current?.id) {
+		if (file && page.data.user?.id) {
 			const formData = new FormData();
 			formData.append('image', file);
-			formData.append('userId', user.current?.id);
+			formData.append('userId', page.data.user?.id);
 			toast.promise(
 				(async () => {
 					const response = await fetch('/account', {
@@ -42,9 +41,9 @@
 	let image: string | null = null;
 
 	async function fetchImage() {
-		if (user.current) {
+		if (page.data.user) {
 			try {
-				const res = await fetch(`/account/${user.current.id}`);
+				const res = await fetch(`/account/${page.data.user.id}`);
 				if (res.ok) {
 					const blob = await res.blob();
 					image = URL.createObjectURL(blob);
@@ -100,26 +99,26 @@
 <div class="mx-16 flex flex-col gap-y-4 w-[32rem]">
 	<div class="flex gap-x-2 text-nowrap items-center justify-between">
 		<Label>First Name :</Label>
-		<Input readonly value={user.current?.firstname} class="w-96" />
+		<Input readonly value={page.data.user?.firstname} class="w-96" />
 	</div>
 	<div class="flex gap-x-2 text-nowrap items-center justify-between">
 		<Label>Last Name :</Label>
-		<Input readonly value={user.current?.lastname} class="w-96" />
+		<Input readonly value={page.data.user?.lastname} class="w-96" />
 	</div>
 	<div class="flex gap-x-2 text-nowrap items-center justify-between">
 		<Label>Email :</Label>
-		<Input readonly value={user.current?.email} class="w-96" />
+		<Input readonly value={page.data.user?.email} class="w-96" />
 	</div>
 	<div class="flex gap-x-2 text-nowrap items-center justify-between">
 		<Label>Phone Number :</Label>
-		<Input readonly value={user.current?.phonenumber} class="w-96" />
+		<Input readonly value={page.data.user?.phonenumber} class="w-96" />
 	</div>
 	<div class="flex gap-x-2 text-nowrap items-center justify-between">
 		<Label>Age :</Label>
-		<Input readonly value={user.current?.age} class="w-96" />
+		<Input readonly value={page.data.user?.age} class="w-96" />
 	</div>
 	<div class="flex gap-x-2 text-nowrap items-center justify-between">
 		<Label>Address :</Label>
-		<Input readonly value={user.current?.address} class="w-96" />
+		<Input readonly value={page.data.user?.address} class="w-96" />
 	</div>
 </div>

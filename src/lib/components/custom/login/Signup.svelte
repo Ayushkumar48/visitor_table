@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { signupSchema, type SignupSchema } from '$lib/client/schema';
-	import { user } from '$lib/client/store.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import * as Form from '$lib/components/ui/form/index.js';
 	import { Input } from '$lib/components/ui/input/index.js';
@@ -9,7 +8,7 @@
 
 	import { type SuperValidated, type Infer, superForm } from 'sveltekit-superforms';
 	import { zodClient } from 'sveltekit-superforms/adapters';
-
+	import { page } from '$app/state';
 	let {
 		data,
 		login = $bindable()
@@ -18,7 +17,7 @@
 	const form = superForm(data.form, {
 		validators: zodClient(signupSchema),
 		onUpdated({ form }) {
-			user.current = form.message.user;
+			page.data.user = form.message.user;
 		}
 	});
 

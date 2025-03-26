@@ -11,8 +11,15 @@
 	import Signup from '$lib/components/custom/login/Signup.svelte';
 	import { cubicInOut, quintIn } from 'svelte/easing';
 	import { fly } from 'svelte/transition';
+	import { onMount } from 'svelte';
+	import { page } from '$app/state';
 	let { data } = $props();
 	let login = $state(true);
+	onMount(() => {
+		if (page.url.searchParams.get('action') === 'signup') {
+			login = false;
+		}
+	});
 </script>
 
 <div class="w-screen h-screen relative">

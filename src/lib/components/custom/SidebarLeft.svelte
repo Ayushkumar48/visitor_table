@@ -1,7 +1,6 @@
 <script lang="ts">
 	import Calendar from 'lucide-svelte/icons/calendar';
 	import House from 'lucide-svelte/icons/house';
-	import Inbox from 'lucide-svelte/icons/inbox';
 	import Search from 'lucide-svelte/icons/search';
 	import Settings from 'lucide-svelte/icons/settings';
 	import * as Sidebar from '$lib/components/ui/sidebar/index.js';
@@ -9,13 +8,15 @@
 	import Sun from 'lucide-svelte/icons/sun';
 	import Moon from 'lucide-svelte/icons/moon';
 
-	import { toggleMode } from 'mode-watcher';
+	import { toggleMode, mode } from 'mode-watcher';
 	import AddVisitor from './AddVisitor.svelte';
 	import type { Infer, SuperValidated } from 'sveltekit-superforms';
 	import type { VisitorSchema } from '$lib/client/schema';
 	import { GalleryVerticalEnd, AudioWaveform, Command, ScrollText } from '@lucide/svelte';
 	import TeamSwitcher from './TeamSwitcher.svelte';
 	import NavUser from './NavUser.svelte';
+	import { fly } from 'svelte/transition';
+	import { quintOut } from 'svelte/easing';
 
 	const items = [
 		{
@@ -98,12 +99,22 @@
 		<Sidebar.Menu class="space-y-2">
 			<Sidebar.MenuItem>
 				<Sidebar.MenuButton onclick={toggleMode}>
-					<Sun
-						class="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0"
-					/>
-					<Moon
-						class="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100"
-					/>
+					{#key $mode}
+						<div
+							in:fly={{
+								y: 100,
+								duration: 300,
+								easing: quintOut
+							}}
+							class="inset-0 flex items-center justify-center"
+						>
+							{#if $mode === 'dark'}
+								<Moon class="size-4 transition-all" />
+							{:else}
+								<Sun class="size-4 transition-all" />
+							{/if}
+						</div>
+					{/key}
 					<span>Change Mode</span>
 					<span class="sr-only">Toggle theme</span>
 				</Sidebar.MenuButton>
