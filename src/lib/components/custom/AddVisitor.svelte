@@ -4,7 +4,7 @@
 	import { Input } from '$lib/components/ui/input/index.js';
 	import { MenuButton } from '$lib/components/ui/sidebar';
 	import { CirclePlus } from '@lucide/svelte';
-	import SuperDebug, { type SuperValidated, type Infer, superForm } from 'sveltekit-superforms';
+	import { type SuperValidated, type Infer, superForm } from 'sveltekit-superforms';
 	import { zodClient } from 'sveltekit-superforms/adapters';
 	import { type VisitorSchema, visitorSchema } from '$lib/client/schema';
 	import VisitorForm from './VisitorForm.svelte';
@@ -22,7 +22,10 @@
 	import type { Visitor } from '$lib/server/db/schema';
 	import { toast } from 'svelte-sonner';
 
-	let { data }: { data: { form: SuperValidated<Infer<VisitorSchema>> } } = $props();
+	let {
+		data,
+		button = false
+	}: { data: { form: SuperValidated<Infer<VisitorSchema>> }; button?: boolean } = $props();
 	const form = superForm(data.form, {
 		validators: zodClient(visitorSchema),
 		onResult: ({ result }) => {
@@ -39,6 +42,7 @@
 	const formSteps = ['Personal Information', 'Visit Information', 'Additional Details'];
 	let currentStep = $state<number>(0);
 	let showForm = $state(false);
+	let checkPhoneNumber = $state(true);
 	let visitorCheckNumber = $state<string>('');
 
 	async function checkVisitor() {
@@ -60,21 +64,28 @@
 			$formData.gender = existingVisitor.gender;
 			$formData.governmentidtype = existingVisitor.governmentidtype;
 			$formData.governmentidnumber = existingVisitor.governmentidnumber;
-			showForm = true;
 		} else {
-			showForm = true;
 			toast.info('Visitor not found. Please fill in the details.');
 		}
+		checkPhoneNumber = false;
+		showForm = true;
 	}
 	let openDialog = $state(false);
 </script>
 
 <Dialog.Root bind:open={openDialog}>
-	<MenuButton onclick={() => (openDialog = !openDialog)}>
-		<CirclePlus /><span>Add New Visitor</span>
-	</MenuButton>
+	{#if !button}
+		<MenuButton onclick={() => (openDialog = !openDialog)}>
+			<CirclePlus /><span>Add New Visitor</span>
+		</MenuButton>
+	{:else}
+		<Button onclick={() => (openDialog = !openDialog)}>
+			<CirclePlus />
+			<span>Add New Visitor</span>
+		</Button>
+	{/if}
 
-	{#if !showForm}
+	{#if checkPhoneNumber && !showForm}
 		<Dialog.Content class="sm:min-w-[600px] flex">
 			<div class="w-1/3 flex flex-col justify-between">
 				<EasyFileSearch class="w-40 h-40" />
@@ -95,8 +106,7 @@
 				</div>
 			</div>
 		</Dialog.Content>
-	{:else}
-		<SuperDebug data={$formData} />
+	{:else if showForm && !checkPhoneNumber}
 		<Dialog.Content class="sm:min-w-[900px] h-[550px] flex">
 			<div class="w-1/3 flex flex-col justify-between">
 				{#if formSteps[currentStep] === 'Personal Information'}
@@ -121,7 +131,7 @@
 						Register a new visitor by adding their details here. Click 'Add' when you're finished.
 					</Dialog.Description>
 				</Dialog.Header>
-				<VisitorForm {form} {formData} {enhance} />
+				<VisitorForm {form} {formData} {enhance} {formSteps} bind:currentStep bind:openDialog />
 			</div>
 		</Dialog.Content>
 	{/if}

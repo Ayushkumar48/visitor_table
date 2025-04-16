@@ -19,6 +19,10 @@
 	import { Input } from '$lib/components/ui/input/index.js';
 	import SelectFilter from '$lib/components/custom/SelectFilter.svelte';
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
+	import AddVisitor from '$lib/components/custom/AddVisitor.svelte';
+	import { page } from '$app/state';
+	import type { SuperValidated, Infer } from 'sveltekit-superforms';
+	import { type VisitorSchema } from '$lib/client/schema';
 
 	type DataTableProps = {
 		columns: ColumnDef<VisitorEntry>[];
@@ -130,6 +134,16 @@
 			</DropdownMenu.Content>
 		</DropdownMenu.Root>
 	</div>
+	{#if !page.url.pathname.includes('search')}
+		<div class="flex items-center justify-end space-x-2 pb-4">
+			<AddVisitor
+				data={page.data as {
+					form: SuperValidated<Infer<VisitorSchema>>;
+				}}
+				button={true}
+			/>
+		</div>
+	{/if}
 	<div class="rounded-md border overflow-y-auto custom-scrollbar">
 		<Table.Root class="min-w-full">
 			<Table.Header>

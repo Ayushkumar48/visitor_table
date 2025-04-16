@@ -3,6 +3,7 @@
 	import { Button } from '$lib/components/ui/button';
 	import { ArrowRight } from 'lucide-svelte';
 	import { siGithub } from 'simple-icons';
+	import image from '$lib/assets/pictures/root-picture.webp?enhanced';
 </script>
 
 <section class="container mx-auto px-4 py-20 md:py-32 flex flex-col items-center text-center">
@@ -39,11 +40,9 @@
 			class="absolute -inset-1 bg-gradient-to-r from-primary/20 to-primary-foreground/20 rounded-lg blur-lg"
 		></div>
 		<div class="relative bg-background rounded-lg border shadow-lg overflow-hidden">
-			<img
-				src="/root-picture.webp?height=600&width=1200"
-				alt="Visitor Table dashboard preview"
-				class="w-full h-auto"
-			/>
+			{#if image}
+				<enhanced:img src={image} alt="Visitor Table dashboard preview" class="w-full h-auto" />
+			{/if}
 		</div>
 	</div>
 </section>

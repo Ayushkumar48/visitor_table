@@ -2,7 +2,6 @@
 	import * as Form from '$lib/components/ui/form/index.js';
 	import * as Select from '$lib/components/ui/select/index';
 	import { Textarea } from '$lib/components/ui/textarea/index';
-	import DatePicker from './DatePicker.svelte';
 	import { Input } from '$lib/components/ui/input/index.js';
 	import { Button } from '$lib/components/ui/button/index.js';
 	import type { Infer, SuperForm, SuperFormEvents } from 'sveltekit-superforms';
@@ -11,7 +10,10 @@
 	let {
 		form,
 		formData,
-		enhance
+		enhance,
+		formSteps,
+		currentStep = $bindable(),
+		openDialog = $bindable()
 	}: {
 		form: SuperForm<Infer<VisitorSchema>, unknown>;
 		formData: SuperFormData<Infer<VisitorSchema>>;
@@ -19,9 +21,10 @@
 			node: HTMLFormElement,
 			events?: SuperFormEvents<Infer<VisitorSchema>, unknown>
 		) => { destroy: () => void };
+		formSteps: string[];
+		currentStep: number;
+		openDialog: boolean;
 	} = $props();
-	const formSteps = ['Personal Information', 'Visit Information', 'Additional Details'];
-	let currentStep = $state<number>(0);
 </script>
 
 <form
@@ -31,7 +34,7 @@
 	action="/api/addvisitor"
 >
 	<div class="space-y-4">
-		<div class:hidden={formSteps[currentStep] !== 'Personal Information'}>
+		{#if formSteps[currentStep] === 'Personal Information'}
 			<h4>{formSteps[currentStep]}</h4>
 			<div class="w-full flex gap-x-2">
 				<Form.Field {form} name="firstname" class="w-1/2">
@@ -184,8 +187,7 @@
 					<Form.FieldErrors />
 				</Form.Field>
 			</div>
-		</div>
-		<div class:hidden={formSteps[currentStep] !== 'Visit Information'}>
+		{:else if formSteps[currentStep] === 'Visit Information'}
 			<h4>{formSteps[currentStep]}</h4>
 			<div class="flex gap-x-2">
 				<Form.Field {form} name="address" class="w-full">
@@ -225,8 +227,7 @@
 					<Form.FieldErrors />
 				</Form.Field>
 			</div>
-		</div>
-		<div class:hidden={formSteps[currentStep] !== 'Additional Details'}>
+		{:else if formSteps[currentStep] === 'Additional Details'}
 			<h4>{formSteps[currentStep]}</h4>
 
 			<Form.Field {form} name="vehiclenumber">
@@ -256,7 +257,7 @@
 
 				<Form.FieldErrors />
 			</Form.Field>
-		</div>
+		{/if}
 	</div>
 	<div class="mt-2 flex justify-between items-center">
 		<div>
@@ -272,7 +273,7 @@
 		</div>
 		<div>
 			{#if currentStep === 2}
-				<Form.Button class="w-24">Add</Form.Button>
+				<Form.Button class="w-24" onclick={() => (openDialog = false)}>Add</Form.Button>
 			{:else}
 				<Button onclick={() => currentStep++} class="w-24">Next</Button>
 			{/if}

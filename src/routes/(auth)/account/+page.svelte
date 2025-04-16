@@ -7,7 +7,6 @@
 	import { onMount } from 'svelte';
 	import { toast } from 'svelte-sonner';
 	import { Button } from '$lib/components/ui/button';
-	import { goto } from '$app/navigation';
 	import { page } from '$app/state';
 	async function uploadImage(event: Event) {
 		const input = event.target as HTMLInputElement;
@@ -32,13 +31,13 @@
 				})(),
 				{
 					loading: 'Uploading...',
-					success: (data) => `Image uploaded successfully!`,
+					success: 'Image uploaded successfully!',
 					error: 'Failed to upload image. Try again!'
 				}
 			);
 		}
 	}
-	let image: string | null = null;
+	let image = $state<string | null>(null);
 
 	async function fetchImage() {
 		if (page.data.user) {
@@ -61,7 +60,7 @@
 </script>
 
 <div class="m-8">
-	<Button onclick={() => goto('/visitors')}><MoveLeft /> Back to Main</Button>
+	<Button onclick={() => window.history.back()}><MoveLeft /> Back to Main</Button>
 </div>
 <div class="flex gap-x-4">
 	<div class="flex mx-16 mt-8 mb-8 gap-x-2">
